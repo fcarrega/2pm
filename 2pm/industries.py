@@ -1,38 +1,42 @@
 # External libraries
 import os
 import sys
+import click
 from tinydb import Query
 
 # Custom libraries
-import shared
-import database
+from . import shared
+from . import database
 
+# Initialize database connection
+db = database.get('industries')
 
-def add(sector, industry, db):
+# Group command
+@click.group()
+def industry():
+    pass
+
+# Add industry
+@industry.command()
+@click.argument('sector')
+@click.argument('industry')
+def add(sector, industry):
     print("Adding " + sector + "/" + industry + " in database..." )
     db.insert({'sector': sector, 'industry': industry})
     print("Done !")
 
-def remove(sector, industry, db):
+@industry.command()
+@click.argument('sector')
+@click.argument('industry')
+def remove(sector, industry):
     print("Removing " + sector + "/" + industry + " from database...")
     Industry = Query()
     db.remove((Industry.sector == sector) & (Industry.industry == industry))
     print("Done !")
 
-def list(db):
+@industry.command()
+def list():
     print("Available sectors / industries couples :")
     industries = db.all()
     for industry in industries:
         print(industry['sector'] + "/" + industry['industry'])
-
-if __name__ == "__main__":
-    db = database.get('industries')
-    action = sys.argv[1]
-    if action == 'add':
-        add(sys.argv[2], sys.argv[3], db)
-    elif action == 'remove':
-        remove(sys.argv[2], sys.argv[3], db)
-    elif action == 'list':
-        list(db)
-    else:
-        print("Action not recognized. Correct actions : add, remove, list")

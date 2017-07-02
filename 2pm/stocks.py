@@ -11,12 +11,32 @@ def get_quotes(ticker_list):
         print(quote[0] + ',' + quote[1])
 
 
-get_quotes(['FRT', 'GGP', 'KIM', 'MAC', 'O', 'REG', 'SLG', 'SPG', 'TCO'])
-
-
+# Retail
+# get_quotes(['FRT', 'GGP', 'KIM', 'MAC', 'O', 'REG', 'SLG', 'SPG', 'TCO'])
 
 if __name__ == "__main__":
-    pass
+    # Diversified
+    get_quotes([
+                'ALX',
+                'ALEX',
+                'AAT',
+                'AHH',
+                'CLNS',
+                'DS',
+                'FREVS',
+                # 'FCE.A',
+                'GZT',
+                'GOOD',
+                'IRET',
+                'LXP',
+                'OLP',
+                'PK',
+                'HHC',
+                'VER',
+                'VNO',
+                'WPC',
+                'WRE'
+              ])
 
 #
 # stocks = ['FRT', 'GGP', 'KIM', 'MAC', 'O', 'REG', 'SLG', 'SPG', 'TCO']
