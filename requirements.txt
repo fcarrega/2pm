@@ -4,5 +4,6 @@ matplotlib
 pandas
 yahoo-finance
 tinydb
+tinydb-serialization
 click
 beautifulsoup4

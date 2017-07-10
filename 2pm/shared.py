@@ -1,5 +1,3 @@
-from yahoo_finance import Share
-
 # Formatting methods
 def output_string(elements):
     output = ''
@@ -7,6 +5,3 @@ def output_string(elements):
         output += element + ', '
     output += elements[-1]
     print(output)
-
-
-# Common stocks related methods
