@@ -7,7 +7,7 @@ from tinydb import Query
 
 # Custom libraries
 from . import shared
-from .import database
+from . import database
 
 # Initialize database connection
 db = database.get('reits')
@@ -57,3 +57,18 @@ def list():
     reits = db.all()
     for reit in reits:
         shared.output_string([reit['ticker'], reit['industry'], reit['currency']])
+
+# Load REITS financial statements for all REITs in database
+@reit.command()
+def load_financial_statements():
+    print("Updating financial statements for all REITs in DB...")
+    reits = db.all()
+    for reit in reits:
+        database.load_financial_statements(reit['ticker'], 'reits')
+
+# Load financial statements for a unique REIT
+@reit.command()
+@click.argument("reit")
+def load_financial_statements_for(reit):
+    print("Loading financial statements for {0}...".format(reit))
+    database.load_financial_statements(reit, 'reits')
