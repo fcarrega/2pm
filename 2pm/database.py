@@ -8,10 +8,8 @@ def get(name):
     return TinyDB('db/' + name + '.json')
 
 # Load a specific file
-def read_financial_statement(ticker, statement, frequency, database):
+def read_financial_statement(ticker, statement, frequency):
     filename = 'data/' + ticker + '/' + ticker + statement + frequency + '.csv'
-    db = get(database)
-    query = Query()
     data = {}
     with open(filename, newline = '') as csvfile:
         reader = csv.reader(csvfile)
@@ -21,17 +19,17 @@ def read_financial_statement(ticker, statement, frequency, database):
             if not empty_row(row):                      # Only insert
                 for index, value in enumerate(row[1:len(row)]):
                     date = shared.format_date(dates[index + 1])
-                    result = shared.merge(data, data_to_insert(statement, frequency, date, key, value))
-    return result
+                    shared.merge(data, data_to_insert(statement, frequency, date, key, value))
+    return data
 
 
 # Load Seeking Alpha financial statements files for a given ticker
-def load_financial_statements(ticker, database):
-    result = {}
+def load_financial_statements(ticker):
+    data = {}
     for statement in ['BalanceSheet', 'CashFlowStatement', 'IncomeStatement']:
         for frequency in ['Annual', 'Quarterly']:
-            shared.merge(result, read_financial_statement(ticker, statement, frequency, database))
-    print(result)
+            shared.merge(data, read_financial_statement(ticker, statement, frequency))
+    return data
 
 # Checks if a financial statement row is emtpy (title)
 def empty_row(row):

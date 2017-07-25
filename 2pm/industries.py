@@ -21,7 +21,7 @@ def industry():
 @click.argument('sector')
 @click.argument('industry')
 def add(sector, industry):
-    print("Adding " + sector + "/" + industry + " in database..." )
+    print("Adding " + sector + " / " + industry + " in database..." )
     db.insert({'sector': sector, 'industry': industry})
     print("Done !")
 
@@ -39,4 +39,4 @@ def list():
     print("Available sectors / industries couples :")
     industries = db.all()
     for industry in industries:
-        print(industry['sector'] + "/" + industry['industry'])
+        print(industry['sector'] + " / " + industry['industry'])

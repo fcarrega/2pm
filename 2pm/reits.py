@@ -34,11 +34,12 @@ def prices():
 # Add REIT to database
 @reit.command()
 @click.argument("reit")
+@click.argument("name")
 @click.argument("reit_industry")
-def add(reit, reit_industry):
+def add(reit, name, reit_industry):
     print("Adding REIT " + reit + " (" + reit_industry + ")" " in database..." )
     ccy = Share(reit).get_currency()
-    db.insert({'ticker': reit, 'sector': 'REIT', 'industry': reit_industry, 'currency': ccy})
+    db.insert({'ticker': reit, 'sector': 'REIT', 'industry': reit_industry, 'currency': ccy, 'name': name})
     print("Done !")
 
 # Remove REIT from database
@@ -56,7 +57,7 @@ def list():
     print("Available REITS :")
     reits = db.all()
     for reit in reits:
-        shared.output_string([reit['ticker'], reit['industry'], reit['currency']])
+        shared.output_string([reit['ticker'], reit['industry'], reit['currency'], reit['name']])
 
 # Load REITS financial statements for all REITs in database
 @reit.command()
@@ -71,4 +72,6 @@ def load_financial_statements():
 @click.argument("reit")
 def load_financial_statements_for(reit):
     print("Loading financial statements for {0}...".format(reit))
-    database.load_financial_statements(reit, 'reits')
+    financial_statements = database.load_financial_statements(reit)
+    query = Query()
+    db.update(financial_statements, query.ticker == reit)
