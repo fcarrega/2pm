@@ -54,10 +54,21 @@ def remove(reit):
 # List available REITs
 @reit.command()
 def list():
-    print("Available REITS :")
     reits = db.all()
+    print("{0} REITS in database :".format(len(reits)))
     for reit in reits:
         shared.output_string([reit['ticker'], reit['industry'], reit['currency'], reit['name']])
+
+# List available REITs for a given industry
+@reit.command()
+@click.argument("industry")
+def list_for(industry):
+    query = Query()
+    reits = db.search(query.industry == industry)
+    print("{0} {1} REITS in database :".format(len(reits), industry))
+    for reit in reits:
+        shared.output_string([reit['ticker'], reit['industry'], reit['currency'], reit['name']])
+
 
 # Load REITS financial statements for all REITs in database
 @reit.command()
