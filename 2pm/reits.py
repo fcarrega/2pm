@@ -8,6 +8,7 @@ from tinydb import Query
 # Custom libraries
 from . import shared
 from . import database
+from . import finance
 
 # Initialize database connection
 db = database.get('reits')
@@ -57,7 +58,8 @@ def list():
     reits = db.all()
     print("{0} REITS in database :".format(len(reits)))
     for reit in reits:
-        shared.output_string([reit['ticker'], reit['industry'], reit['currency'], reit['name']])
+        currency = '' if reit['currency'] == None else reit['currency']
+        shared.output_string([reit['ticker'], reit['industry'], currency, reit['name']])
 
 # List available REITs for a given industry
 @reit.command()
@@ -85,3 +87,15 @@ def load_financial_statements_for(reit):
     financial_statements = database.load_financial_statements(reit)
     query = Query()
     db.update(financial_statements, query.ticker == reit)
+
+# Run financial analysis for a given REIT industry
+@reit.command()
+@click.argument('industry')
+def run_analysis_for(industry):
+    print("Running financial analysis for {0} REITs...".format(industry))
+
+@reit.command()
+@click.argument('ticker')
+def stats_for(ticker):
+    print("Financial ratios for {0}:".format(ticker))
+    print("- Market capitalization: {0}".format(finance.market_cap('reits', ticker, 'quarterly')))

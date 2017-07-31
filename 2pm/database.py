@@ -39,6 +39,7 @@ def empty_row(row):
             empty_row = empty_row or True
     return empty_row
 
+# Formats data to insert
 def data_to_insert(statement, frequency, date, key, value):
     return {
         statement.lower(): {
@@ -49,3 +50,20 @@ def data_to_insert(statement, frequency, date, key, value):
             }
         }
     }
+
+# Latest date available for a given ticker, financial statement and frequency
+def latest_date(db_name, ticker, statement, frequency):
+    dates = available_dates(db_name, ticker, statement, frequency)
+    return str(max(list(map(int, dates))))
+
+# Available dates for a given ticker, statement and frequency
+def available_dates(db_name, ticker, statement, frequency):
+    db = get(db_name)
+    q = Query()
+    return list(db.search(q.ticker == ticker)[0][statement][frequency].keys())
+
+# Retrieve specific value in DB
+def get_value(db_name, ticker, statement, frequency, date, entry):
+    db = get(db_name)
+    q = Query()
+    return db.search(q.ticker == ticker)[0][statement][frequency][date][entry]
