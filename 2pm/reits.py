@@ -1,9 +1,12 @@
-# External libraries
+# Standad library
 import os
 import sys
+
+# External libraries
 import click
 from yahoo_finance import Share
 from tinydb import Query
+from money import Money
 
 # Custom libraries
 from . import shared
@@ -24,6 +27,11 @@ def get_reit_price(ticker, reit_industry, ccy):
     price = reit.get_price()
     datetime = reit.get_trade_datetime()
     shared.output_string([reit_industry, ticker, price, ccy, datetime])
+
+@reit.command()
+@click.argument('ticker')
+def price_for(ticker):
+    print(finance.price(ticker))
 
 # Get REITs prices
 @reit.command()
@@ -98,4 +106,7 @@ def run_analysis_for(industry):
 @click.argument('ticker')
 def stats_for(ticker):
     print("Financial ratios for {0}:".format(ticker))
-    print("- Market capitalization: {0}".format(finance.market_cap('reits', ticker, 'quarterly')))
+    currency = finance.currency('reits', ticker)
+    print("- Market capitalization: {0}".format(str(Money(finance.market_cap('reits', ticker, 'quarterly'), currency))))
+    print("- Yield: {0}%".format(finance.current_yield(ticker)))
+    print("- 5Y average FFO: {0}".format(str(Money(finance.average_ffops('reits', ticker), currency))))
