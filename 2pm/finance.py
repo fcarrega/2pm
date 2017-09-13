@@ -1,5 +1,5 @@
 # External libraries
-from numpy import mean
+import numpy as np
 from yahoo_finance import Share
 from tinydb import Query
 
@@ -30,13 +30,13 @@ def loan_to_value(ticker):
 
 # Average funds from operations
 def average_ffops(db_name, ticker):
-    return mean(database.get_historical_data(db_name, ticker, 'cashflowstatement', 'annual', 'funds_from_operations')) * 1000000
+    ffo = np.array(database.get_historical_data(db_name, ticker, 'cashflowstatement', 'annual', 'funds_from_operations'))
+    diluted_shares = np.array(database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'diluted_shares_outstanding'))
+    return np.mean(np.divide(ffo, diluted_shares))
 
-# Average AFFOPS
-
-# Average adjusted funds from operations per share growth
-def average_affops_growth(arg):
-    pass
+# Average funds from operations per share growth
+def average_ffops_growth(db_name, ticker):
+    return avg_growth_rate(database.get_historical_data(db_name, ticker, 'cashflowstatement', 'annual', 'funds_from_operations'))
 
 # Current yield
 def current_yield(ticker):
@@ -93,4 +93,15 @@ def reinvestment_rate(ticker):
 # Intrinsic value compounding rate
 # ROIC x RR
 def ivcr(ticker):
+    pass
+
+# Average growth rate
+def avg_growth_rate(values):
+    a = np.array(values).astype(float)
+    return np.nanmean(a[1:]/a[:-1]) * 100
+
+def discounted_cashflow_value(arg):
+    pass
+
+def divident_discount_value(arg):
     pass
