@@ -70,6 +70,6 @@ def get_value(db_name, ticker, statement, frequency, date, entry):
 def get_historical_data(db_name, ticker, statement, frequency, entry):
     data = get(db_name).search(Query().ticker == ticker)[0][statement][frequency]
     result = []
-    for k in data:
+    for k in sorted(data):
         result.append(data[k][entry])
     return result

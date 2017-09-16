@@ -51,8 +51,9 @@ def beta(ticker):
     pass
 
 # Dilution
-def dilution(ticker):
-    pass
+def average_dilution_rate(db_name, ticker):
+    diluted_shares = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'diluted_shares_outstanding')
+    return avg_growth_rate(diluted_shares)
 
 # Weighted average cost of capital
 def wacc(ticker):
@@ -64,22 +65,34 @@ def payout_ratio(ticker):
     pass
 
 # Return on equity
-# Résultat net / capitaux propres
-def roe(ticker):
-    pass
+def avg_roe(db_name, ticker):
+    net_income = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'net_income')
+    total_equity = database.get_historical_data(db_name, ticker, 'balancesheet', 'annual', 'total_equity')
+    return np.mean(np.divide(net_income, total_equity)) * 100
 
 # Return on investment
 def roi(ticker):
     pass
 
 # Return on invested capital
-# Résultat net / (capitaux propres + dette LT)
-def roic(ticker):
-    pass
+def avg_roic(db_name, ticker):
+    net_income = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'net_income')
+    total_equity = database.get_historical_data(db_name, ticker, 'balancesheet', 'annual', 'total_equity')
+    long_term_debt = database.get_historical_data(db_name, ticker, 'balancesheet', 'annual', 'longterm_debt')
+    return np.mean(np.divide(net_income, np.add(total_equity, long_term_debt))) * 100
+
+# Cash return on invested capital
+def avg_croic(db_name, ticker):
+    free_cashflow = database.get_historical_data(db_name, ticker, 'cashflowstatement', 'annual', 'free_cash_flow')
+    total_equity = database.get_historical_data(db_name, ticker, 'balancesheet', 'annual', 'total_equity')
+    long_term_debt = database.get_historical_data(db_name, ticker, 'balancesheet', 'annual', 'longterm_debt')
+    return np.mean(np.divide(free_cashflow, np.add(total_equity, long_term_debt))) * 100
+
 
 # Free cash flows
-def fcf(ticker):
-    pass
+def avg_fcf(db_name, ticker):
+    free_cashflow = database.get_historical_data(db_name, ticker, 'cashflowstatement', 'annual', 'free_cash_flow')
+    return np.mean(free_cashflow)
 
 # Average PEG
 def average_peg(ticker):
@@ -98,7 +111,7 @@ def ivcr(ticker):
 # Average growth rate
 def avg_growth_rate(values):
     a = np.array(values).astype(float)
-    return np.nanmean(a[1:]/a[:-1]) * 100
+    return (np.nanmean(a[1:]/a[:-1]) - 1) * 100
 
 def discounted_cashflow_value(arg):
     pass
