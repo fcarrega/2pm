@@ -102,6 +102,16 @@ def load_financial_statements_for(reit):
 @click.argument('industry')
 def run_analysis_for(industry):
     print("Running financial analysis for {0} REITs...".format(industry))
+    reits = db.search(Query().industry == industry)
+    tickers = []
+    for reit in reits:
+        tickers.append(reit['ticker'])
+        # Yield
+        # FFOPS growth rate
+        # Dilution
+        # ROE
+        # CROIC
+
 
 @reit.command()
 @click.argument('ticker')
