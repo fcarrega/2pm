@@ -3,3 +3,4 @@ tinydb
 click
 money
 numpy
+matplotlib
