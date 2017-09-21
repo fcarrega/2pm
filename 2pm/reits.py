@@ -85,7 +85,8 @@ def load_financial_statements():
     print("Updating financial statements for all REITs in DB...")
     reits = db.all()
     for reit in reits:
-        database.load_financial_statements(reit['ticker'], 'reits')
+        print(reit['ticker'])
+        database.load_financial_statements(reit['ticker'])
 
 # Load financial statements for a unique REIT
 @reit.command()
