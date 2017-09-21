@@ -59,10 +59,16 @@ def average_dilution_rate(db_name, ticker):
 def wacc(ticker):
     pass
 
-# Payout ratio
+
 # EBITDA / coût de la dette
-def payout_ratio(ticker):
-    pass
+
+# Payout ratio
+def payout_ratio(db_name, ticker, date = None):
+    d = database.latest_date(db_name, ticker, 'incomestatement', 'annual') if date == None else date
+    dividend = Share(ticker).get_dividend_share()
+    ffo = database.get_value(db_name, ticker, 'cashflowstatement', 'annual', d, 'funds_from_operations')
+    diluted_shares = database.get_value(db_name, ticker, 'incomestatement', 'annual', d, 'diluted_shares_outstanding')
+    return (float(dividend) / (ffo / diluted_shares)) * 100
 
 # Return on equity
 def avg_roe(db_name, ticker):
@@ -102,6 +108,13 @@ def average_peg(ticker):
 # Invested incremental capital / total earnings
 def reinvestment_rate(ticker):
     pass
+
+# Debt to market value
+def debt_to_market_value(db_name, ticker, frequency, date = None):
+    d = database.latest_date(db_name, ticker, 'incomestatement', frequency) if date == None else date
+    capitalization = market_cap(db_name, ticker, frequency, d)
+    debt = database.get_value(db_name, ticker, 'balancesheet', frequency, d, 'total_liabilities') * 1000000
+    return (debt / capitalization) * 100
 
 # Intrinsic value compounding rate
 # ROIC x RR
