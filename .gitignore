@@ -19,7 +19,7 @@ db/
 .DS_Store
 
 # Output
-results/*
+reports/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -1,8 +1,6 @@
-numpy
-scipy
-matplotlib
-pandas
 yahoo-finance
 tinydb
 click
-beautifulsoup4
+money
+numpy
+matplotlib
