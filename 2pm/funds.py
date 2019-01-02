@@ -2,7 +2,6 @@
 import os
 import sys
 import click
-from yahoo_finance import Share
 from tinydb import Query
 
 # Custom libraries

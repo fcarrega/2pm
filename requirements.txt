@@ -1,4 +1,3 @@
-yahoo-finance
 tinydb
 click
 money
