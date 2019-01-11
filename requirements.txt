@@ -4,3 +4,4 @@ click
 money
 numpy
 matplotlib
+pandas
