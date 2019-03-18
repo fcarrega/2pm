@@ -9,24 +9,26 @@ def get(name):
 
 # Load a specific file
 def read_financial_statement(ticker, statement, frequency):
-    filename = 'data/' + ticker + '/' + ticker + statement + frequency + '.csv'
-    data = {}
-    with open(filename, newline = '') as csvfile:
-        reader = csv.reader(csvfile)
-        dates = next(reader, None)                      # Retrieve dates on file header
-        for row in reader:                              # Loop on each line
-            key = shared.parameterize(row[0].strip())   # Keep track of keys
-            if not empty_row(row):                      # Only insert
-                for index, value in enumerate(row[1:len(row)]):
-                    date = shared.format_date(dates[index + 1])
-                    shared.merge(data, data_to_insert(statement, frequency, date, key, value))
-    return data
+    filename = 'data/' + ticker + '/' + ticker + ' ' + statement + ' ' + frequency + '.csv'
+    print(filename)
+    return filename
+    # data = {}
+    # with open(filename, newline = '') as csvfile:
+    #     reader = csv.reader(csvfile)
+    #     dates = next(reader, None)                      # Retrieve dates on file header
+    #     for row in reader:                              # Loop on each line
+    #         key = shared.parameterize(row[0].strip())   # Keep track of keys
+    #         if not empty_row(row):                      # Only insert
+    #             for index, value in enumerate(row[1:len(row)]):
+    #                 date = shared.format_date(dates[index + 1])
+    #                 shared.merge(data, data_to_insert(statement, frequency, date, key, value))
+    # return data
 
 
 # Load Seeking Alpha financial statements files for a given ticker
 def load_financial_statements(ticker):
     data = {}
-    for statement in ['BalanceSheet', 'CashFlowStatement', 'IncomeStatement']:
+    for statement in ['Balance Sheet', 'Cash Flow Statement', 'Income Statement']:
         for frequency in ['Annual', 'Quarterly']:
             shared.merge(data, read_financial_statement(ticker, statement, frequency))
     return data

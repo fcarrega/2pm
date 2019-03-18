@@ -19,6 +19,7 @@ setup(
         currency  = 2pm.currencies:currency
         industry  = 2pm.industries:industry
         commodity = 2pm.commodities:commodity
+        stock     = 2pm.stocks:stock
         reit      = 2pm.reits:reit
         fund      = 2pm.funds:fund
         order     = 2pm.orders:order

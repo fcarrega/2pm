@@ -1,28 +1,19 @@
 # External libraries
 import numpy as np
-from yahoo_finance import Share
 from tinydb import Query
 
 # Custom libraries
 from . import database
-
-# ROI
-# ROIC
-# CROIC
-
-# Current price
-def price(ticker):
-    return Share(ticker).get_price()
 
 # Currency
 def currency(db_name, ticker):
     return database.get(db_name).search(Query().ticker == ticker)[0]['currency']
 
 # Current market capitalization
-def market_cap(db_name, ticker, frequency, date = None):
+def market_cap(db_name, ticker, frequency, price, date = None):
     d = database.latest_date(db_name, ticker, 'incomestatement', frequency) if date == None else date
     nb_shares = database.get_value(db_name, ticker, 'incomestatement', frequency, d, 'diluted_shares_outstanding') * 1000000
-    return nb_shares * float(price(ticker))
+    return nb_shares * float(price)
 
 # Loan-to-value
 def loan_to_value(ticker):
@@ -38,34 +29,26 @@ def average_ffops(db_name, ticker):
 def average_ffops_growth(db_name, ticker):
     return avg_growth_rate(database.get_historical_data(db_name, ticker, 'cashflowstatement', 'annual', 'funds_from_operations'))
 
-# Current yield
-def current_yield(ticker):
-    return Share(ticker).get_dividend_yield()
+# Average earnings per share
+def average_eps(db_name, ticker):
+    eps = np.array(database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'eps_diluted'))
+    return np.mean(eps)
 
-# Yield on cost
-def yield_on_cost(ticker):
-    pass
+# Average earnings per share growth
+def average_eps_growth(db_name, ticker):
+    return avg_growth_rate(database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'eps_diluted'))
 
-# Beta
-def beta(ticker):
-    pass
 
 # Dilution
 def average_dilution_rate(db_name, ticker):
     diluted_shares = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'diluted_shares_outstanding')
     return avg_growth_rate(diluted_shares)
 
-# Weighted average cost of capital
-def wacc(ticker):
-    pass
-
-
 # EBITDA / coût de la dette
 
 # Payout ratio
-def payout_ratio(db_name, ticker, date = None):
+def payout_ratio(db_name, ticker, dividend, date = None):
     d = database.latest_date(db_name, ticker, 'incomestatement', 'annual') if date == None else date
-    dividend = Share(ticker).get_dividend_share()
     ffo = database.get_value(db_name, ticker, 'cashflowstatement', 'annual', d, 'funds_from_operations')
     diluted_shares = database.get_value(db_name, ticker, 'incomestatement', 'annual', d, 'diluted_shares_outstanding')
     return (float(dividend) / (ffo / diluted_shares)) * 100
@@ -80,6 +63,9 @@ def avg_roe(db_name, ticker):
 def roi(ticker):
     pass
 
+def current_yield(price, dividend):
+    return float(dividend) / float(price) * 100
+
 # Return on invested capital
 def avg_roic(db_name, ticker):
     net_income = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'net_income')
@@ -93,7 +79,6 @@ def avg_croic(db_name, ticker):
     total_equity = database.get_historical_data(db_name, ticker, 'balancesheet', 'annual', 'total_equity')
     long_term_debt = database.get_historical_data(db_name, ticker, 'balancesheet', 'annual', 'longterm_debt')
     return np.mean(np.divide(free_cashflow, np.add(total_equity, long_term_debt))) * 100
-
 
 # Free cash flows
 def avg_fcf(db_name, ticker):
@@ -110,9 +95,9 @@ def reinvestment_rate(ticker):
     pass
 
 # Debt to market value
-def debt_to_market_value(db_name, ticker, frequency, date = None):
+def debt_to_market_value(db_name, ticker, frequency, price, date = None):
     d = database.latest_date(db_name, ticker, 'incomestatement', frequency) if date == None else date
-    capitalization = market_cap(db_name, ticker, frequency, d)
+    capitalization = market_cap(db_name, ticker, frequency, price, d)
     debt = database.get_value(db_name, ticker, 'balancesheet', frequency, d, 'total_liabilities') * 1000000
     return (debt / capitalization) * 100
 
@@ -126,8 +111,48 @@ def avg_growth_rate(values):
     a = np.array(values).astype(float)
     return (np.nanmean(a[1:]/a[:-1]) - 1) * 100
 
-def discounted_cashflow_value(arg):
-    pass
+# REITs EBITDA
+def ebitda(db_name, ticker):
+    net_income = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'net_income')
+    total_interest_expense = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'total_interest_expense')
+    tmp = np.add(net_income, total_interest_expense)
+    income_taxes = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'income_taxes')
+    tmp = np.add(tmp, income_taxes)
+    depreciation_and_amortization = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'depreciation_and_amortization_expense')
+    return np.add(tmp, depreciation_and_amortization)
 
-def divident_discount_value(arg):
-    pass
+# Stock EBITDA
+def stock_ebitda(db_name, ticker):
+    net_income = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'net_income')
+    total_interest_expense = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'interest_expense')
+    tmp = np.add(net_income, total_interest_expense)
+    income_taxes = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'income_tax')
+    tmp = np.add(tmp, income_taxes)
+    depreciation_and_amortization = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'depreciation_and_amortization_expense')
+    return np.add(tmp, depreciation_and_amortization)
+
+# Average EBITDA
+def avg_ebitda(db_name, ticker):
+    return np.mean(ebitda(db_name, ticker))
+
+# Average stock EBITDA
+def avg_stock_ebitda(db_name, ticker):
+    return np.mean(stock_ebitda(db_name, ticker))
+
+# Average EBITDA growth rate
+def avg_ebitda_growth(db_name, ticker):
+    return avg_growth_rate(ebitda(db_name, ticker))
+
+# Average stock EBITDA growth rate
+def avg_stock_ebitda_growth(db_name, ticker):
+    return avg_growth_rate(stock_ebitda(db_name, ticker))
+
+# Average interest coverage
+def avg_interest_coverage(db_name, ticker):
+    interests = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'total_interest_expense')
+    return np.mean(np.divide(ebitda(db_name, ticker), interests))
+
+# Average interest coverage
+def avg_stock_interest_coverage(db_name, ticker):
+    interests = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'interest_expense')
+    return np.mean(np.divide(stock_ebitda(db_name, ticker), interests))
