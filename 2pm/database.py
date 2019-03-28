@@ -25,10 +25,10 @@ def read_financial_statement(ticker, statement, frequency):
     # return data
 
 
-# Load Seeking Alpha financial statements files for a given ticker
+# Load Morningstar financial statements files for a given ticker
 def load_financial_statements(ticker):
     data = {}
-    for statement in ['Balance Sheet', 'Cash Flow Statement', 'Income Statement']:
+    for statement in ['Balance Sheet', 'Cash Flow', 'Income Statement']:
         for frequency in ['Annual', 'Quarterly']:
             shared.merge(data, read_financial_statement(ticker, statement, frequency))
     return data

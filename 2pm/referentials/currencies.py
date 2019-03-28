@@ -2,12 +2,11 @@
 import os
 import sys
 import click
-from yahoo_finance import Currency
 from tinydb import Query
 
 # Custom libraries
-from . import shared
-from . import database
+from .. import shared
+from .. import database
 
 # Initialize database connection
 db = database.get('currencies')

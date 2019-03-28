@@ -1,18 +1,7 @@
-### Curencies commands ###
-
-- Add currency to referential database: make add_currency CURRENCY=EUR
-- Remove currency from referential database: make remove_currency CURRENCY=EUR
-- List currencies in database: make list_currencies
-- Retrieve current FX rates (currency / EUR) : make get_rates
-
-
-### Industries commands ###
-An industry is always linked to a sector. Ex. : REIT / Retail where REIT is the sector and Retail the industry.
-
-- Add industry to referential database: make add_industry SECTOR=REIT INDUSTRY=Retail
-- Remove industry from referential database: make remove_industry SECTOR=REIT INDUSTRY=Retail
-- List industries in database: make list_industries
-
 ### REITs commands ###
 
 ### Stocks commands ###
+
+### Funds commands ###
+
+### Commodities commands ###

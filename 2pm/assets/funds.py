@@ -5,8 +5,8 @@ import click
 from tinydb import Query
 
 # Custom libraries
-from . import shared
-from . import database
+from .. import shared
+from .. import database
 
 # Initialize database connection
 db = database.get('mutual_funds')

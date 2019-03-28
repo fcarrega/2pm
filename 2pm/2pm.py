@@ -5,4 +5,4 @@ import click
 def help():
     with open('doc/help.txt') as f:
         for line in f:
-                print(line, end = '')
+            print(line, end = '')

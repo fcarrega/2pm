@@ -8,9 +8,9 @@ from tinydb import Query
 from money import Money
 
 # Custom libraries
-from . import shared
-from . import database
-from . import finance
+from .. import shared
+from .. import database
+from .. import finance
 
 # Initialize database connection
 db = database.get('stocks')

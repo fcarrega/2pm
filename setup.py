@@ -1,8 +1,7 @@
-# -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
 
 setup(
-    name='2:00 PM',
+    name='2pm',
     version='0.1',
     description='Personal Portfolio Manager',
     author='F. Carrega',
@@ -16,13 +15,11 @@ setup(
     entry_points='''
         [console_scripts]
         help      = 2pm.2pm:help
-        currency  = 2pm.currencies:currency
-        industry  = 2pm.industries:industry
-        commodity = 2pm.commodities:commodity
-        stock     = 2pm.stocks:stock
-        reit      = 2pm.reits:reit
-        fund      = 2pm.funds:fund
-        order     = 2pm.orders:order
-        position  = 2pm.positions:position
+        commodity = 2pm.assets.commodities:commodity
+        stock     = 2pm.assets.stocks:stock
+        reit      = 2pm.assets.reits:reit
+        fund      = 2pm.assets.funds:fund
+        currency  = 2pm.referentials.currencies:currency
+        industry  = 2pm.referentials.industries:industry
     ''',
 )
