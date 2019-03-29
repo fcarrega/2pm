@@ -9,7 +9,7 @@ from .. import shared
 from .. import database
 
 # Initialize database connection
-db = database.get('industries')
+db = database.get('referentials/industries')
 
 # Group command
 @click.group()
@@ -25,6 +25,7 @@ def add(sector, industry):
     db.insert({'sector': sector, 'industry': industry})
     print("Done !")
 
+# Remove industry / sector
 @industry.command()
 @click.argument('sector')
 @click.argument('industry')
@@ -34,6 +35,7 @@ def remove(sector, industry):
     db.remove((Industry.sector == sector) & (Industry.industry == industry))
     print("Done !")
 
+# List existing industries / sectors
 @industry.command()
 def list():
     print("Available sectors / industries couples :")

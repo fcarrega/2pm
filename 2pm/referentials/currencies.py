@@ -9,26 +9,12 @@ from .. import shared
 from .. import database
 
 # Initialize database connection
-db = database.get('currencies')
+db = database.get('referentials/currencies')
 
 # Group command
 @click.group()
 def currency():
     pass
-
-# Retrieve a given FX Rate - standalone method
-def get_fx_rate(ccy):
-    fx = Currency(ccy + 'EUR')
-    rate = fx.get_rate()
-    timestamp = fx.get_trade_datetime()
-    shared.output_string([ccy, 'EUR', rate, timestamp])
-
-# Retrieve & display FX rates
-@currency.command()
-def fx_rates():
-    currencies = db.all()
-    for currency in currencies:
-        get_fx_rate(currency['iso'])
 
 # Add currency to database
 @currency.command()
