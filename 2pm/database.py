@@ -1,4 +1,5 @@
 import csv
+import pandas
 from tinydb import TinyDB, Query
 
 from . import shared
@@ -10,19 +11,15 @@ def get(name):
 # Load a specific file
 def read_financial_statement(ticker, statement, frequency):
     filename = 'data/' + ticker + '/' + ticker + ' ' + statement + ' ' + frequency + '.csv'
-    print(filename)
-    return filename
-    # data = {}
-    # with open(filename, newline = '') as csvfile:
-    #     reader = csv.reader(csvfile)
-    #     dates = next(reader, None)                      # Retrieve dates on file header
-    #     for row in reader:                              # Loop on each line
-    #         key = shared.parameterize(row[0].strip())   # Keep track of keys
-    #         if not empty_row(row):                      # Only insert
-    #             for index, value in enumerate(row[1:len(row)]):
-    #                 date = shared.format_date(dates[index + 1])
-    #                 shared.merge(data, data_to_insert(statement, frequency, date, key, value))
-    # return data
+    pandas.read_csv(filename, delimiter = ',', header = 1)
+    # dates = next(reader, None)                      # Retrieve dates on file header
+    # for row in reader:                              # Loop on each line
+    #     key = shared.parameterize(row[0].strip())   # Keep track of keys
+    #     if not empty_row(row):                      # Only insert
+    #         for index, value in enumerate(row[1:len(row)]):
+    #             date = shared.format_date(dates[index + 1])
+    #             shared.merge(data, data_to_insert(statement, frequency, date, key, value))
+    # # return data
 
 
 # Load Morningstar financial statements files for a given ticker
