@@ -5,6 +5,3 @@ scipy
 numpy
 matplotlib
 pandas
-requests
-lxml
-cssselect
