@@ -10,9 +10,23 @@ def get(name):
 
 # Load a specific file
 def read_financial_statement(ticker, statement, frequency):
-    filename = 'data/' + ticker + '/' + ticker + ' ' + statement + ' ' + frequency + '.csv'
-    pandas.read_csv(filename, delimiter = ',', header = 1)
-    # dates = next(reader, None)                      # Retrieve dates on file header
+
+# TBR
+import pandas
+ticker = 'MAC'
+statement = 'Balance Sheet'
+frequency = 'Annual'
+
+filename = 'data/' + ticker + '/' + ticker + ' ' + statement + ' ' + frequency + '.csv'
+data = pandas.read_csv(filename, delimiter = ',', header = 1)
+dates = data.columns.values[1:]
+
+for date in dates:
+    for index, row in data.iterrows():
+        key = row[0]
+        value = row[date]
+        print(date, key, value)
+
     # for row in reader:                              # Loop on each line
     #     key = shared.parameterize(row[0].strip())   # Keep track of keys
     #     if not empty_row(row):                      # Only insert
@@ -31,12 +45,12 @@ def load_financial_statements(ticker):
     return data
 
 # Checks if a financial statement row is emtpy (title)
-def empty_row(row):
-    empty_row = False
-    for element in row[1:len(row)-1]:
-        if element == "":
-            empty_row = empty_row or True
-    return empty_row
+# def empty_row(row):
+#     empty_row = False
+#     for element in row[1:len(row)-1]:
+#         if element == "":
+#             empty_row = empty_row or True
+#     return empty_row
 
 # Formats data to insert
 def data_to_insert(statement, frequency, date, key, value):
