@@ -71,15 +71,6 @@ def list_for(industry):
     for reit in reits:
         shared.output_string([reit['ticker'], reit['industry'], reit['currency'], reit['name']])
 
-# Load REITS financial statements for all REITs in database
-@reit.command()
-def load_financial_statements():
-    print("Updating financial statements for all REITs in DB...")
-    reits = db.all()
-    for reit in reits:
-        print(reit['ticker'])
-        database.load_financial_statements(reit['ticker'])
-
 # Load financial statements for a unique REIT
 @reit.command()
 @click.argument("reit")
