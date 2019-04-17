@@ -77,8 +77,8 @@ def list_for(industry):
 def load_financial_statements_for(reit):
     print("Loading financial statements for {0}...".format(reit))
     financial_statements = database.load_financial_statements(reit)
-    query = Query()
-    db.update(financial_statements, query.ticker == reit)
+    # query = Query()
+    # db.update(financial_statements, query.ticker == reit)
 
 # Run financial analysis for a given REIT industry
 @reit.command()

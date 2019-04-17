@@ -1,5 +1,7 @@
+import os
 import csv
 import pandas
+from pathlib import Path
 from tinydb import TinyDB, Query
 
 from . import shared
@@ -10,38 +12,41 @@ def get(name):
 
 # Load a specific file
 def read_financial_statement(ticker, statement, frequency):
-    filename = 'data/' + ticker + '/' + ticker + ' ' + statement + ' ' + frequency + '.csv'
-    data = {}
+    name = filename(ticker, statement, frequency)
     source = pandas.read_csv(filename, delimiter = ',', header = 1)
-    dates = source.columns.values[1:]
+    dir = pickle_dir(ticker)
+    file = pickle_file(ticker, statement, frequency)
 
-    for date in dates:
-        for index, row in source.iterrows():
-            key = row[0]
-            value = row[date]
-            shared.merge(data, data_to_insert(statement, frequency, date, key, value))
+    if Path(dir).is_dir():
+        if Path(dir + file).is_file():
+            print('We need to merge files')
+        # else:
+        #     # source.to_pickle(dir + file)
+        #     print('We need to create file')
+    else:
+        os.mkdir(dir)
 
-    return data
+    return
+
+
+    # if os.path.isfile(pickle_file):
+    #     print('File already exists')
+    # else:
+    #     source.to_pickle(pickle_file)
+
+
+    # If the pickle file does not exist
+    # Create it
+    # If the file exists
+    # Merge the two dataframes
 
 # Load Morningstar financial statements files for a given ticker
 def load_financial_statements(ticker):
     data = {}
     for statement in ['Balance Sheet', 'Cash Flow', 'Income Statement']:
         for frequency in ['Annual', 'Quarterly']:
-            shared.merge(data, read_financial_statement(ticker, statement, frequency))
+            read_financial_statement(ticker, statement, frequency)
     return data
-
-# Formats data to insert
-def data_to_insert(statement, frequency, date, key, value):
-    return {
-        statement.lower(): {
-            frequency.lower(): {
-                date: {
-                    key: shared.cast(value)
-                }
-            }
-        }
-    }
 
 # Latest date available for a given ticker, financial statement and frequency
 def latest_date(db_name, ticker, statement, frequency):
@@ -65,3 +70,12 @@ def get_historical_data(db_name, ticker, statement, frequency, entry):
     for k in sorted(data):
         result.append(data[k][entry])
     return result
+
+def filename(ticker, statement, frequency):
+    return 'data/' + ticker + '/' + ticker + ' ' + statement + ' ' + frequency + '.csv'
+
+def pickle_dir(ticker):
+    return 'data/frames/' + ticker + '/'
+
+def pickle_file(ticker, statement, frequency):
+    return ticker + ' ' + statement + ' ' + frequency + '.pkl'
