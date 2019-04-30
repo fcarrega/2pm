@@ -16,29 +16,14 @@ def read_financial_statement(ticker, statement, frequency):
     source = pandas.read_csv(name, delimiter = ',', header = 1)
     dir = pickle_dir(ticker)
     file = pickle_file(ticker, statement, frequency)
-
     if Path(dir).is_dir():
         if Path(dir + file).is_file():
-            print('We need to merge files')
-        else:
-            # source.to_pickle(dir + file)
-            print('We need to create file')
+            existing = pandas.read_pickle(dir + file)
+            source = pandas.concat([existing, source])
+        source.to_pickle(dir + file)
     else:
         os.mkdir(dir)
-
     return
-
-
-    # if os.path.isfile(pickle_file):
-    #     print('File already exists')
-    # else:
-    #     source.to_pickle(pickle_file)
-
-
-    # If the pickle file does not exist
-    # Create it
-    # If the file exists
-    # Merge the two dataframes
 
 # Load Morningstar financial statements files for a given ticker
 def load_financial_statements(ticker):
