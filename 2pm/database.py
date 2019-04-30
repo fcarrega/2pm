@@ -13,16 +13,16 @@ def get(name):
 # Load a specific file
 def read_financial_statement(ticker, statement, frequency):
     name = filename(ticker, statement, frequency)
-    source = pandas.read_csv(filename, delimiter = ',', header = 1)
+    source = pandas.read_csv(name, delimiter = ',', header = 1)
     dir = pickle_dir(ticker)
     file = pickle_file(ticker, statement, frequency)
 
     if Path(dir).is_dir():
         if Path(dir + file).is_file():
             print('We need to merge files')
-        # else:
-        #     # source.to_pickle(dir + file)
-        #     print('We need to create file')
+        else:
+            # source.to_pickle(dir + file)
+            print('We need to create file')
     else:
         os.mkdir(dir)
 
@@ -72,7 +72,7 @@ def get_historical_data(db_name, ticker, statement, frequency, entry):
     return result
 
 def filename(ticker, statement, frequency):
-    return 'data/' + ticker + '/' + ticker + ' ' + statement + ' ' + frequency + '.csv'
+    return './data/' + ticker + '/' + ticker + ' ' + statement + ' ' + frequency + '.csv'
 
 def pickle_dir(ticker):
     return 'data/frames/' + ticker + '/'

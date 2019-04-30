@@ -20,18 +20,6 @@ db = database.get('reits')
 def reit():
     pass
 
-@reit.command()
-@click.argument('ticker')
-def price_for(ticker):
-    print(finance.price(ticker))
-
-# Get REITs prices
-@reit.command()
-def prices():
-    reits = db.all()
-    for reit in reits:
-        get_reit_price(reit['ticker'], reit['industry'], reit['currency'])
-
 # Add REIT to database
 @reit.command()
 @click.argument("reit")
@@ -74,11 +62,9 @@ def list_for(industry):
 # Load financial statements for a unique REIT
 @reit.command()
 @click.argument("reit")
-def load_financial_statements_for(reit):
+def load(reit):
     print("Loading financial statements for {0}...".format(reit))
     financial_statements = database.load_financial_statements(reit)
-    # query = Query()
-    # db.update(financial_statements, query.ticker == reit)
 
 # Run financial analysis for a given REIT industry
 @reit.command()
