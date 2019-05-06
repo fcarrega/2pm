@@ -9,16 +9,6 @@ from . import database
 def currency(db_name, ticker):
     return database.get(db_name).search(Query().ticker == ticker)[0]['currency']
 
-# Current market capitalization
-def market_cap(db_name, ticker, frequency, price, date = None):
-    d = database.latest_date(db_name, ticker, 'incomestatement', frequency) if date == None else date
-    nb_shares = database.get_value(db_name, ticker, 'incomestatement', frequency, d, 'diluted_shares_outstanding') * 1000000
-    return nb_shares * float(price)
-
-# Loan-to-value
-def loan_to_value(ticker):
-    pass
-
 # Average funds from operations
 def average_ffops(db_name, ticker):
     ffo = np.array(database.get_historical_data(db_name, ticker, 'cashflowstatement', 'annual', 'funds_from_operations'))
@@ -44,8 +34,6 @@ def average_dilution_rate(db_name, ticker):
     diluted_shares = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'diluted_shares_outstanding')
     return avg_growth_rate(diluted_shares)
 
-# EBITDA / coût de la dette
-
 # Payout ratio
 def payout_ratio(db_name, ticker, dividend, date = None):
     d = database.latest_date(db_name, ticker, 'incomestatement', 'annual') if date == None else date
@@ -58,13 +46,6 @@ def avg_roe(db_name, ticker):
     net_income = database.get_historical_data(db_name, ticker, 'incomestatement', 'annual', 'net_income')
     total_equity = database.get_historical_data(db_name, ticker, 'balancesheet', 'annual', 'total_equity')
     return np.mean(np.divide(net_income, total_equity)) * 100
-
-# Return on investment
-def roi(ticker):
-    pass
-
-def current_yield(price, dividend):
-    return float(dividend) / float(price) * 100
 
 # Return on invested capital
 def avg_roic(db_name, ticker):
@@ -85,26 +66,12 @@ def avg_fcf(db_name, ticker):
     free_cashflow = database.get_historical_data(db_name, ticker, 'cashflowstatement', 'annual', 'free_cash_flow')
     return np.mean(free_cashflow)
 
-# Average PEG
-def average_peg(ticker):
-    pass
-
-# Reinvestment rate (RR)
-# Invested incremental capital / total earnings
-def reinvestment_rate(ticker):
-    pass
-
 # Debt to market value
 def debt_to_market_value(db_name, ticker, frequency, price, date = None):
     d = database.latest_date(db_name, ticker, 'incomestatement', frequency) if date == None else date
     capitalization = market_cap(db_name, ticker, frequency, price, d)
     debt = database.get_value(db_name, ticker, 'balancesheet', frequency, d, 'total_liabilities') * 1000000
     return (debt / capitalization) * 100
-
-# Intrinsic value compounding rate
-# ROIC x RR
-def ivcr(ticker):
-    pass
 
 # Average growth rate
 def avg_growth_rate(values):
