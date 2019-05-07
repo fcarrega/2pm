@@ -19,7 +19,7 @@ def read_financial_statement(ticker, statement, frequency):
     if Path(dir).is_dir():
         if Path(dir + file).is_file():
             existing = pandas.read_pickle(dir + file)
-            source = pandas.concat([existing, source])
+            existing.merge(source)
         source.to_pickle(dir + file)
     else:
         os.mkdir(dir)
