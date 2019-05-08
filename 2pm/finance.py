@@ -5,6 +5,18 @@ from tinydb import Query
 # Custom libraries
 from . import database
 
+### Nouveaux scoring
+# 5 years average equity growth
+# 5 years average CROIC growth
+# 5 years average EBITDA growth
+# Payout ratio
+# Passif / equity
+# Current ratio
+# 5Y average IR coverage
+# 5Y average dilution
+# 5Y average owners earnings
+# Utilisation du cash
+
 # Currency
 def currency(db_name, ticker):
     return database.get(db_name).search(Query().ticker == ticker)[0]['currency']
