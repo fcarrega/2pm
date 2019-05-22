@@ -14,6 +14,7 @@ def get(name):
 def read_financial_statement(ticker, statement, frequency):
     name = filename(ticker, statement, frequency)
     source = pandas.read_csv(name, delimiter = ',', header = 1)
+    source = source.T
     dir = pickle_dir(ticker)
     file = pickle_file(ticker, statement, frequency)
     if Path(dir).is_dir():
