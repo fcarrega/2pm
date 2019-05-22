@@ -91,6 +91,8 @@ def stats_for(ticker):
     currency = finance.currency('reits', ticker)
     header()
 
+    # df.set_index(list(df)[0])
+
     # 5Y average cash return on invested capital growth
     # 5Y average operating cash flows growth
     # 5Y average equity growth
