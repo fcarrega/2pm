@@ -7,6 +7,8 @@ from . import database
 
 ### Nouveaux scoring
 # 5 years average equity growth
+def avg_equity_growth(arg):
+    pass
 # 5 years average CROIC growth
 # 5 years average EBITDA growth
 # Payout ratio
