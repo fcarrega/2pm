@@ -14,8 +14,19 @@ def get(name):
 def read_financial_statement(ticker, statement, frequency):
     name = filename(ticker, statement, frequency)
     source = pandas.read_csv(name, delimiter = ',', header = 1)
+
+    # Transpose matrix to use time series
     source = source.T
+
+    # Use first line as column names
     source.columns = source.iloc[0]
+
+    # Remove first line to keep only data
+    source = source.iloc[1:]
+
+    # Remove last line
+    source = source.drop('TTM')
+
     dir = pickle_dir(ticker)
     file = pickle_file(ticker, statement, frequency)
     if Path(dir).is_dir():
@@ -66,3 +77,12 @@ def pickle_dir(ticker):
 
 def pickle_file(ticker, statement, frequency):
     return ticker + ' ' + statement + ' ' + frequency + '.pkl'
+#
+# ticker = 'MAC'
+# statement = 'Balance Sheet'
+# statement = 'Cash Flow'
+# frequency = 'Annual'
+dir = pickle_dir(ticker)
+file = pickle_file(ticker, statement, frequency)
+df = pandas.read_pickle(dir + file)
+df

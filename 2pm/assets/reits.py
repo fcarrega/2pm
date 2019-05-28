@@ -94,8 +94,12 @@ def stats_for(ticker):
     # df.set_index(list(df)[0])
 
     # 5Y average cash return on invested capital growth
+
     # 5Y average operating cash flows growth
+    # df['Net cash provided by operating activities'].pct_change().tail(5).mean()
+
     # 5Y average equity growth
+     # df["Total stockholders' equity"].pct_change().tail(5).mean()
 
     # Payout ratio
     # Liabilities / equity
