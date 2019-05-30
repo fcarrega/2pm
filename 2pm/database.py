@@ -24,8 +24,9 @@ def read_financial_statement(ticker, statement, frequency):
     # Remove first line to keep only data
     source = source.iloc[1:]
 
-    # Remove last line
-    source = source.drop('TTM')
+    # Remove last line if TTM
+    if 'TTM' in source.index:
+        source = source.drop('TTM')
 
     dir = pickle_dir(ticker)
     file = pickle_file(ticker, statement, frequency)
@@ -82,7 +83,7 @@ def pickle_file(ticker, statement, frequency):
 # statement = 'Balance Sheet'
 # statement = 'Cash Flow'
 # frequency = 'Annual'
-dir = pickle_dir(ticker)
-file = pickle_file(ticker, statement, frequency)
-df = pandas.read_pickle(dir + file)
-df
+# dir = pickle_dir(ticker)
+# file = pickle_file(ticker, statement, frequency)
+# df = pandas.read_pickle(dir + file)
+# df
