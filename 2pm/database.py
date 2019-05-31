@@ -33,7 +33,7 @@ def read_financial_statement(ticker, statement, frequency):
     if Path(dir).is_dir():
         if Path(dir + file).is_file():
             existing = pandas.read_pickle(dir + file)
-            existing.merge(source)
+            source = pandas.concat([existing, source], axis=1, join='inner')
         source.to_pickle(dir + file)
     else:
         os.mkdir(dir)
@@ -73,12 +73,16 @@ def get_historical_data(db_name, ticker, statement, frequency, entry):
 def filename(ticker, statement, frequency):
     return './data/' + ticker + '/' + ticker + ' ' + statement + ' ' + frequency + '.csv'
 
+# import os
+# import csv
+# import pandas
+
 def pickle_dir(ticker):
     return 'data/frames/' + ticker + '/'
 
 def pickle_file(ticker, statement, frequency):
     return ticker + ' ' + statement + ' ' + frequency + '.pkl'
-#
+
 # ticker = 'MAC'
 # statement = 'Balance Sheet'
 # statement = 'Cash Flow'
