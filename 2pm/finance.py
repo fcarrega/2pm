@@ -12,18 +12,41 @@ def avg_equity_growth(ticker):
     return df["Total stockholders' equity"].pct_change().tail(5).mean()
 
 # 5 years average CROIC growth
+def croic_growth(ticker):
+    pass
+
 # 5 years average operating cashflows growth
 def avg_ocf_growth(ticker):
     df = db.statement(ticker, 'Cash Flow', 'Annual')
     return df['Net cash provided by operating activities'].pct_change().tail(5).mean()
 
 # Payout ratio
+def payout_ratio(ticker):
+    pass
+
 # Passif / equity
+def liabilities_on_equity(ticker):
+    pass
+
 # Current ratio
+def current_ratio(ticker):
+    pass
+
 # 5Y average IR coverage
+def avg_ir_coverage(ticker):
+    pass
+
 # 5Y average dilution
+def avg_dilution(ticker):
+    pass
+
 # 5Y average owners earnings
+def owners_earnings(ticker):
+    pass
+
 # Utilisation du cash
+def cash_user(ticker):
+    pass
 
 # Currency
 def currency(db_name, ticker):
