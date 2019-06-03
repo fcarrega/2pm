@@ -77,13 +77,22 @@ def filename(ticker, statement, frequency):
 def pickle_dir(ticker):
     return 'data/frames/' + ticker + '/'
 
-def pickle_file(ticker, statement, frequency):
-    return ticker + ' ' + statement + ' ' + frequency + '.pkl'
+def pickle_file(ticker, name, frequency):
+    return ticker + ' ' + name + ' ' + frequency + '.pkl'
 
+def statement(ticker, name, frequency):
+    dir = pickle_dir(ticker)
+    file = pickle_file(ticker, name, frequency)
+    df = pandas.read_pickle(dir + file)
+    return df
 
 # import os
 # import csv
 # import pandas
+#
+# ticker = 'MAC'
+# name = 'Balance Sheet'
+# frequency = 'Annual'
 #
 # def pickle_dir(ticker):
 #     return 'data/frames/' + ticker + '/'
@@ -91,11 +100,10 @@ def pickle_file(ticker, statement, frequency):
 # def pickle_file(ticker, statement, frequency):
 #     return ticker + ' ' + statement + ' ' + frequency + '.pkl'
 #
-# ticker = 'MAC'
-# statement = 'Balance Sheet'
-# statement = 'Cash Flow'
-# frequency = 'Annual'
-# dir = pickle_dir(ticker)
-# file = pickle_file(ticker, statement, frequency)
-# df = pandas.read_pickle(dir + file)
-# df
+# def statement(ticker, name, frequency):
+#     dir = pickle_dir(ticker)
+#     file = pickle_file(ticker, name, frequency)
+#     df = pandas.read_pickle(dir + file)
+#     return df
+
+# statement(ticker, name, frequency)
