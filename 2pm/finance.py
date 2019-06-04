@@ -12,8 +12,12 @@ def avg_equity_growth(ticker):
     return df["Total stockholders' equity"].pct_change().tail(5).mean()
 
 # 5 years average CROIC growth
-def croic_growth(ticker):
-    pass
+def avg_croic_growth(ticker):
+    fcf = db.statement(ticker, 'Cash flow', 'Annual')['Free cash flow']
+    equity = db.statement(ticker, 'Balance sheet', 'Annual')["Total stockholders' equity"]
+    lt_debt = db.statement(ticker, 'Balance sheet', 'Annual')['Long-term debt']
+    croic = fcf / (equity + lt_debt)
+    return croic.pct_change().tail(5).mean()
 
 # 5 years average operating cashflows growth
 def avg_ocf_growth(ticker):
@@ -26,7 +30,11 @@ def payout_ratio(ticker):
 
 # Passif / equity
 def liabilities_on_equity(ticker):
-    pass
+    df = db.statement(ticker, 'Balance sheet', 'Quarterly')
+    liabilities = df['Total liabilities'].tail(1)
+    equity = df["Total stockholders' equity"].tail(1)
+    ratio = liabilities / equity
+    return ratio
 
 # Current ratio
 def current_ratio(ticker):

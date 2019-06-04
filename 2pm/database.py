@@ -105,5 +105,5 @@ def statement(ticker, name, frequency):
 #     file = pickle_file(ticker, name, frequency)
 #     df = pandas.read_pickle(dir + file)
 #     return df
-
-# statement(ticker, name, frequency)
+#
+# df = statement(ticker, name, frequency)

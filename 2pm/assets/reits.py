@@ -92,16 +92,13 @@ def stats_for(ticker):
     header()
 
     # 5Y average cash return on invested capital growth
+    print(finance.avg_croic_growth(ticker))
 
     # 5Y average operating cash flows growth
     print(finance.avg_ocf_growth(ticker))
-    # df = database.statement(ticker, 'Cash Flow', 'Annual')
-    # df['Net cash provided by operating activities'].pct_change().tail(5).mean()
 
     # 5Y average equity growth
     print(finance.avg_equity_growth(ticker))
-    # df = database.statement(ticker, 'Balance Sheet', 'Annual')
-    # df["Total stockholders' equity"].pct_change().tail(5).mean()
 
     # Payout ratio
     # Liabilities / equity
