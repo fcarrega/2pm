@@ -91,7 +91,7 @@ def statement(ticker, name, frequency):
 # import pandas
 #
 # ticker = 'MAC'
-# name = 'Balance Sheet'
+# name = 'Income statement'
 # frequency = 'Annual'
 #
 # def pickle_dir(ticker):

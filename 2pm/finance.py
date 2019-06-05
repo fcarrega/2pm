@@ -34,7 +34,7 @@ def liabilities_on_equity(ticker):
     liabilities = df['Total liabilities'].tail(1)
     equity = df["Total stockholders' equity"].tail(1)
     ratio = liabilities / equity
-    return ratio
+    return ratio.iloc[-1]
 
 # Current ratio
 def current_ratio(ticker):
@@ -46,14 +46,15 @@ def avg_ir_coverage(ticker):
 
 # 5Y average dilution
 def avg_dilution(ticker):
-    pass
+    df = db.statement(ticker, 'Income statement', 'Annual')
+    return df['Diluted'].pct_change().tail(5).mean()
 
 # 5Y average owners earnings
 def owners_earnings(ticker):
     pass
 
 # Utilisation du cash
-def cash_user(ticker):
+def cash_use(ticker):
     pass
 
 # Currency

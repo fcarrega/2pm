@@ -102,10 +102,12 @@ def stats_for(ticker):
 
     # Payout ratio
     # Liabilities / equity
+    print(finance.liabilities_on_equity(ticker))
     # Current ratio
     # 5Y average IR coverage
 
     # 5Y average dilution
+    print(finance.avg_dilution(ticker))
     # Owner's earnings
     # Cash use
 
