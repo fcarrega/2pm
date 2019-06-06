@@ -26,7 +26,10 @@ def avg_ocf_growth(ticker):
 
 # Payout ratio
 def payout_ratio(ticker):
-    pass
+    dividend = db.statement(ticker, 'Cash flow', 'Annual')['Cash dividends paid']
+    net_income = db.statement(ticker, 'Income statement', 'Annual')['Net income']
+    ratio = dividend / net_income
+    return ratio.iloc[-1]
 
 # Passif / equity
 def liabilities_on_equity(ticker):
@@ -34,7 +37,7 @@ def liabilities_on_equity(ticker):
     liabilities = df['Total liabilities'].tail(1)
     equity = df["Total stockholders' equity"].tail(1)
     ratio = liabilities / equity
-    return ratio.iloc[-1]
+    return ratio.iloc[-1] * -1
 
 # Current ratio
 def current_ratio(ticker):
@@ -87,11 +90,11 @@ def average_dilution_rate(db_name, ticker):
     return avg_growth_rate(diluted_shares)
 
 # Payout ratio
-def payout_ratio(db_name, ticker, dividend, date = None):
-    d = db.latest_date(db_name, ticker, 'incomestatement', 'annual') if date == None else date
-    ffo = db.get_value(db_name, ticker, 'cashflowstatement', 'annual', d, 'funds_from_operations')
-    diluted_shares = db.get_value(db_name, ticker, 'incomestatement', 'annual', d, 'diluted_shares_outstanding')
-    return (float(dividend) / (ffo / diluted_shares)) * 100
+# def payout_ratio(db_name, ticker, dividend, date = None):
+#     d = db.latest_date(db_name, ticker, 'incomestatement', 'annual') if date == None else date
+#     ffo = db.get_value(db_name, ticker, 'cashflowstatement', 'annual', d, 'funds_from_operations')
+#     diluted_shares = db.get_value(db_name, ticker, 'incomestatement', 'annual', d, 'diluted_shares_outstanding')
+#     return (float(dividend) / (ffo / diluted_shares)) * 100
 
 # Return on equity
 def avg_roe(db_name, ticker):

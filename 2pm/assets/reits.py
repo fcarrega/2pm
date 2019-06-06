@@ -101,6 +101,8 @@ def stats_for(ticker):
     print(finance.avg_equity_growth(ticker))
 
     # Payout ratio
+    print(finance.payout_ratio(ticker))
+
     # Liabilities / equity
     print(finance.liabilities_on_equity(ticker))
     # Current ratio
