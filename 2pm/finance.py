@@ -67,7 +67,7 @@ def cash_use(ticker):
     net_income = db.statement(ticker, 'Income statement', 'Annual')['Net income']
     total_net_incomme = net_income.sum()
 
-    pass
+    return (delta_equity + paid_dividends) / total_net_incomme
 
 
 
