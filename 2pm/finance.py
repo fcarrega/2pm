@@ -58,7 +58,23 @@ def owners_earnings(ticker):
 
 # Utilisation du cash
 def cash_use(ticker):
+    equity = db.statement(ticker, 'Balance sheet', 'Annual')["Total stockholders' equity"]
+    delta_equity = equity.iloc[-1] - equity[0]
+
+    dividend = db.statement(ticker, 'Cash flow', 'Annual')['Cash dividends paid']
+    paid_dividends = dividend.sum() * -1
+
+    net_income = db.statement(ticker, 'Income statement', 'Annual')['Net income']
+    total_net_incomme = net_income.sum()
+
     pass
+
+
+
+
+
+
+
 
 # Currency
 def currency(db_name, ticker):
