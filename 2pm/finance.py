@@ -41,10 +41,15 @@ def liabilities_on_equity(ticker):
 
 # Current ratio
 def current_ratio(ticker):
-    pass
+    df = db.statement(ticker, 'Balance sheet', 'Quarterly').iloc[-1]
+    assets = df['Cash and cash equivalents'] + df['Receivables']
+    liabilities = df['Payables and accrued expenses']
+    return assets / liabilities
 
 # 5Y average IR coverage
 def avg_ir_coverage(ticker):
+    # Coverage = (EBITDA - Depreciation & amortization) / Interests expense
+
     pass
 
 # 5Y average dilution
@@ -54,6 +59,7 @@ def avg_dilution(ticker):
 
 # 5Y average owners earnings
 def owners_earnings(ticker):
+    # owners_earnings = (FCF - CapEx) / FCF
     pass
 
 # Utilisation du cash
