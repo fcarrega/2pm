@@ -48,9 +48,12 @@ def current_ratio(ticker):
 
 # 5Y average IR coverage
 def avg_ir_coverage(ticker):
-    # Coverage = (EBITDA - Depreciation & amortization) / Interests expense
-
-    pass
+    income_statement = db.statement(ticker, 'Income statement', 'Annual')
+    ebitda = income_statement['EBITDA']
+    depreciation_and_amortization = income_statement['Depreciation and amortization']
+    interest_expense = income_statement['Interest expenses']
+    coverage = (ebitda - depreciation_and_amortization) / interest_expense
+    return coverage.tail(5).mean()
 
 # 5Y average dilution
 def avg_dilution(ticker):
@@ -59,8 +62,11 @@ def avg_dilution(ticker):
 
 # 5Y average owners earnings
 def owners_earnings(ticker):
-    # owners_earnings = (FCF - CapEx) / FCF
-    pass
+    cashflows = db.statement(ticker, 'Cash flow', 'Annual')
+    fcf = cashflows['Free cash flow']
+    capex = cashflows['Other investing activities']
+    owners_earnings = (fcf - capex) / fcf
+    return owners_earnings.tail(5).mean()
 
 # Utilisation du cash
 def cash_use(ticker):
