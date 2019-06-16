@@ -84,49 +84,12 @@ def run_analysis_for(industry):
 
 @reit.command()
 @click.argument('ticker')
-# @click.argument('price')
-# @click.argument('dividend')
 def stats_for(ticker):
     print("Financial ratios for {0}:".format(ticker))
     currency = finance.currency('reits', ticker)
     header()
+    stats(ticker)
 
-    # 5Y average cash return on invested capital growth
-    print(finance.avg_croic_growth(ticker))
-
-    # 5Y average operating cash flows growth
-    print(finance.avg_ocf_growth(ticker))
-
-    # 5Y average equity growth
-    print(finance.avg_equity_growth(ticker))
-
-    # Payout ratio
-    print(finance.payout_ratio(ticker))
-
-    # Liabilities / equity
-    print(finance.liabilities_on_equity(ticker))
-    # Current ratio
-    # 5Y average IR coverage
-
-    # 5Y average dilution
-    print(finance.avg_dilution(ticker))
-    # Owner's earnings
-    # Cash use
-
-    # debt_to_market = finance.debt_to_market_value('reits', ticker, 'quarterly', price)
-    # payout_ratio = finance.payout_ratio('reits', ticker, dividend)
-    # avg_ffops = finance.average_ffops('reits', ticker)
-    # avg_ffops_growth = finance.average_ffops_growth('reits', ticker)
-    # avg_dil_rate = finance.average_dilution_rate('reits', ticker)
-    # avg_roe = finance.avg_roe('reits', ticker)
-    # avg_roic = finance.avg_roic('reits', ticker)
-    # avg_croic = finance.avg_croic('reits', ticker)
-    # avg_fcf = finance.avg_fcf('reits', ticker)
-    # avg_ebitda = finance.avg_ebitda('reits', ticker)
-    # avg_ebitda_growth = finance.avg_ebitda_growth('reits', ticker)
-    # avg_interest_coverage = finance.avg_interest_coverage('reits', ticker)
-    #
-    # print("{0}|{1:.2f}%|{2:.2f}%|{3:.2f}%|{4}|{5:.2f}%|{6:.2f}%|{7:.2f}%|{8:.2f}%|{9:.2f}%|{10:.2f}|{11}|{12:.2f}%|{13}".format(market_cap, current_yield, debt_to_market, payout_ratio, avg_ffops, avg_ffops_growth, avg_dil_rate, avg_roe, avg_roic, avg_croic, avg_fcf, avg_ebitda, avg_ebitda_growth, avg_interest_coverage))
     #
     # print("- Market capitalization: {0:.2f}".format(market_cap))
     # print("- Yield: {0:.2f}%".format(current_yield))
@@ -155,3 +118,34 @@ def header():
          'Owners earnings,'
          'Cash use')
     print(h)
+
+def stats(ticker):
+    # 5Y average cash return on invested capital growth
+    print('{0:.2f}%'.format(finance.avg_croic_growth(ticker)))
+
+    # 5Y average operating cash flows growth
+    print('{0:.2f}%'.format(finance.avg_ocf_growth(ticker)))
+
+    # 5Y average equity growth
+    print('{0:.2f}%'.format(finance.avg_equity_growth(ticker)))
+
+    # Payout ratio
+    print(finance.payout_ratio(ticker))
+
+    # Liabilities / equity
+    print(finance.liabilities_on_equity(ticker))
+
+    # Current ratio
+    print(finance.current_ratio(ticker))
+
+    # 5Y average IR coverage
+    print('{0:.2f}%'.format(finance.avg_ir_coverage(ticker)))
+
+    # 5Y average dilution
+    print('{0:.2f}%'.format(finance.avg_dilution(ticker)))
+
+    # Owner's earnings
+    print(finance.owners_earnings(ticker))
+
+    # Cash use
+    print(finance.cash_use(ticker))
