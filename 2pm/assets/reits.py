@@ -6,6 +6,7 @@ import sys
 import click
 from tinydb import Query
 from money import Money
+import pandas
 
 # Custom libraries
 from .. import shared
@@ -87,65 +88,36 @@ def run_analysis_for(industry):
 def stats_for(ticker):
     print("Financial ratios for {0}:".format(ticker))
     currency = finance.currency('reits', ticker)
-    header()
-    stats(ticker)
+    # Initialize stats
+    statistics = pandas.Series(stats(ticker))
+    statistics.index = header()
 
-    #
-    # print("- Market capitalization: {0:.2f}".format(market_cap))
-    # print("- Yield: {0:.2f}%".format(current_yield))
-    # print("- Debt to market value: {0:.2f}%".format(debt_to_market))
-    # print("- Payout ratio: {0:.2f}%".format(payout_ratio))
-    # print("- 5Y avg. FFOPS: {0}".format(avg_ffops))
-    # print("- 5Y avg. FFOPS growth rate: {0:.2f}%".format(avg_ffops_growth))
-    # print("- 5Y avg. dilution rate: {0:.2f}%".format(avg_dil_rate))
-    # print("- 5Y avg. ROE: {0:.2f}%".format(avg_roe))
-    # print("- 5Y avg. ROIC: {0:.2f}%".format(avg_roic))
-    # print("- 5Y avg. CROIC: {0:.2f}%".format(avg_croic))
-    # print("- 5Y avg. FCF: {0:.2f}M {1}".format(avg_fcf, currency))
-    # print("- 5Y avg. EBITDA: {0:.2f}M {1}".format(avg_ebitda, currency))
-    # print("- 5Y avg. EBITDA growth rate: {0:.2f}%".format(avg_ebitda_growth))
-    # print("- 5Y avg. EBITDA interests coverage: {0:.2f}".format(avg_interest_coverage))
+    print(statistics)
+    pass
+
 
 def header():
-    h = ('5Y avg. CROIC growth,'
-         '5Y avg. OCF growth,'
-         '5Y avg. eq. growth,'
-         'Payout ratio,'
-         'Liab. / eq.,'
-         'Current ratio,'
-         '5Y avg. IR cov.,'
-         '5Y avg. dilution,'
-         'Owners earnings,'
-         'Cash use')
-    print(h)
+    index = ('5Y avg. CROIC growth',
+             '5Y avg. OCF growth',
+             '5Y avg. eq. growth',
+             'Payout ratio',
+             'Liabilities / equity',
+             'Current ratio',
+             '5Y avg. IR coverage',
+             '5Y avg. dilution',
+             'Owners earnings',
+             'Cash use')
+    return index
 
 def stats(ticker):
-    # 5Y average cash return on invested capital growth
-    print('{0:.2f}%'.format(finance.avg_croic_growth(ticker)))
-
-    # 5Y average operating cash flows growth
-    print('{0:.2f}%'.format(finance.avg_ocf_growth(ticker)))
-
-    # 5Y average equity growth
-    print('{0:.2f}%'.format(finance.avg_equity_growth(ticker)))
-
-    # Payout ratio
-    print(finance.payout_ratio(ticker))
-
-    # Liabilities / equity
-    print(finance.liabilities_on_equity(ticker))
-
-    # Current ratio
-    print(finance.current_ratio(ticker))
-
-    # 5Y average IR coverage
-    print('{0:.2f}%'.format(finance.avg_ir_coverage(ticker)))
-
-    # 5Y average dilution
-    print('{0:.2f}%'.format(finance.avg_dilution(ticker)))
-
-    # Owner's earnings
-    print(finance.owners_earnings(ticker))
-
-    # Cash use
-    print(finance.cash_use(ticker))
+    statistics = [ finance.avg_croic_growth(ticker),      # 5Y average cash return on invested capital growth
+                   finance.avg_ocf_growth(ticker),        # 5Y average operating cash flows growth
+                   finance.avg_equity_growth(ticker),     # 5Y average equity growth
+                   finance.payout_ratio(ticker),          # Payout ratio
+                   finance.liabilities_on_equity(ticker), # Liabilities / equity
+                   finance.current_ratio(ticker),         # Current ratio
+                   finance.avg_ir_coverage(ticker),       # 5Y average IR coverage
+                   finance.avg_dilution(ticker),          # 5Y average dilution
+                   finance.owners_earnings(ticker),       # Owner's earnings
+                   finance.cash_use(ticker) ]             # Cash use
+    return statistics
