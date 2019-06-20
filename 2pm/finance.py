@@ -58,7 +58,8 @@ def avg_ir_coverage(ticker):
 # 5Y average dilution
 def avg_dilution(ticker):
     df = db.statement(ticker, 'Income statement', 'Annual')
-    return df['Diluted'].pct_change().tail(5).mean()
+    # Manage duplicated column names (EPS & shares outstanding)
+    return df['Diluted'].iloc[:,-1].pct_change().tail(5).mean()
 
 # 5Y average owners earnings
 def owners_earnings(ticker):
