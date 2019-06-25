@@ -88,11 +88,16 @@ def run_analysis_for(industry):
 def stats_for(ticker):
     print("Financial ratios for {0}:".format(ticker))
     currency = finance.currency('reits', ticker)
-    # Initialize stats
-    statistics = pandas.Series(stats(ticker))
-    statistics.index = header()
 
+    # Initialize stats
+    statistics = pandas.DataFrame(stats(ticker))
+    statistics.index = header()
     print(statistics)
+
+    # Transpose matrix
+    t = statistics.T.to_csv(index=False)
+    print(t)
+
     pass
 
 
