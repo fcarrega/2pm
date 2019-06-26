@@ -102,9 +102,9 @@ def stats_for(ticker):
 
 
 def header():
-    index = ('5Y avg. CROIC growth',
+    index = ('5Y avg. eq. growth',
+             '5Y avg. CROIC growth',
              '5Y avg. OCF growth',
-             '5Y avg. eq. growth',
              'Payout ratio',
              'Liabilities / equity',
              'Current ratio',
@@ -115,9 +115,9 @@ def header():
     return index
 
 def stats(ticker):
-    statistics = [ finance.avg_croic_growth(ticker),      # 5Y average cash return on invested capital growth
+    statistics = [ finance.avg_equity_growth(ticker),     # 5Y average equity growth
+                   finance.avg_croic_growth(ticker),      # 5Y average cash return on invested capital growth
                    finance.avg_ocf_growth(ticker),        # 5Y average operating cash flows growth
-                   finance.avg_equity_growth(ticker),     # 5Y average equity growth
                    finance.payout_ratio(ticker),          # Payout ratio
                    finance.liabilities_on_equity(ticker), # Liabilities / equity
                    finance.current_ratio(ticker),         # Current ratio
