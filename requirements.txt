@@ -1,6 +1,7 @@
-yahoo-finance
 tinydb
 click
 money
+scipy
 numpy
 matplotlib
+pandas

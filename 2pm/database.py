@@ -1,4 +1,7 @@
+import os
 import csv
+import pandas
+from pathlib import Path
 from tinydb import TinyDB, Query
 
 from . import shared
@@ -9,47 +12,41 @@ def get(name):
 
 # Load a specific file
 def read_financial_statement(ticker, statement, frequency):
-    filename = 'data/' + ticker + '/' + ticker + statement + frequency + '.csv'
-    data = {}
-    with open(filename, newline = '') as csvfile:
-        reader = csv.reader(csvfile)
-        dates = next(reader, None)                      # Retrieve dates on file header
-        for row in reader:                              # Loop on each line
-            key = shared.parameterize(row[0].strip())   # Keep track of keys
-            if not empty_row(row):                      # Only insert
-                for index, value in enumerate(row[1:len(row)]):
-                    date = shared.format_date(dates[index + 1])
-                    shared.merge(data, data_to_insert(statement, frequency, date, key, value))
-    return data
+    name = filename(ticker, statement, frequency)
+    source = pandas.read_csv(name, delimiter = ',', header = 1)
 
+    # Transpose matrix to use time series
+    source = source.T
 
-# Load Seeking Alpha financial statements files for a given ticker
+    # Use first line as column names
+    source.columns = source.iloc[0]
+
+    # Remove first line to keep only data
+    source = source.iloc[1:]
+
+    # Remove last line if TTM
+    if 'TTM' in source.index:
+        source = source.drop('TTM')
+
+    dir = pickle_dir(ticker)
+    file = pickle_file(ticker, statement, frequency)
+    if Path(dir).is_dir():
+        if Path(dir + file).is_file():
+            existing = pandas.read_pickle(dir + file)
+            existing.update(source)
+            source = existing
+        source.to_pickle(dir + file)
+    else:
+        os.mkdir(dir)
+    return
+
+# Load Morningstar financial statements files for a given ticker
 def load_financial_statements(ticker):
     data = {}
-    for statement in ['BalanceSheet', 'CashFlowStatement', 'IncomeStatement']:
+    for statement in ['Balance Sheet', 'Cash Flow', 'Income Statement']:
         for frequency in ['Annual', 'Quarterly']:
-            shared.merge(data, read_financial_statement(ticker, statement, frequency))
+            read_financial_statement(ticker, statement, frequency)
     return data
-
-# Checks if a financial statement row is emtpy (title)
-def empty_row(row):
-    empty_row = False
-    for element in row[1:len(row)-1]:
-        if element == "":
-            empty_row = empty_row or True
-    return empty_row
-
-# Formats data to insert
-def data_to_insert(statement, frequency, date, key, value):
-    return {
-        statement.lower(): {
-            frequency.lower(): {
-                date: {
-                    key: shared.cast(value)
-                }
-            }
-        }
-    }
 
 # Latest date available for a given ticker, financial statement and frequency
 def latest_date(db_name, ticker, statement, frequency):
@@ -73,3 +70,40 @@ def get_historical_data(db_name, ticker, statement, frequency, entry):
     for k in sorted(data):
         result.append(data[k][entry])
     return result
+
+def filename(ticker, statement, frequency):
+    return './data/' + ticker + '/' + ticker + ' ' + statement + ' ' + frequency + '.csv'
+
+def pickle_dir(ticker):
+    return 'data/frames/' + ticker + '/'
+
+def pickle_file(ticker, name, frequency):
+    return ticker + ' ' + name + ' ' + frequency + '.pkl'
+
+def statement(ticker, name, frequency):
+    dir = pickle_dir(ticker)
+    file = pickle_file(ticker, name, frequency)
+    df = pandas.read_pickle(dir + file)
+    return df
+
+# import os
+# import csv
+# import pandas
+#
+# ticker = 'MAC'
+# name = 'Income statement'
+# frequency = 'Annual'
+#
+# def pickle_dir(ticker):
+#     return 'data/frames/' + ticker + '/'
+#
+# def pickle_file(ticker, statement, frequency):
+#     return ticker + ' ' + statement + ' ' + frequency + '.pkl'
+#
+# def statement(ticker, name, frequency):
+#     dir = pickle_dir(ticker)
+#     file = pickle_file(ticker, name, frequency)
+#     df = pandas.read_pickle(dir + file)
+#     return df
+#
+# df = statement(ticker, name, frequency)

@@ -1,8 +1,8 @@
-# 2pm - A personal portfolio manager
+# 2pm - A Personal Portfolio Manager
 
-## Foreword
+## Foreword
 
-This is a personal project build with Python.  The purpose of this project is :
+This is a personal project build with Python. The purpose of this project is :
 
 1) To manage a personal financial portfolio
 
@@ -15,5 +15,6 @@ Just run the following command in a terminal :
 
 `make init`
 
+## Help
 
-## Content
+Just run `help` in the terminal to get a list of available commands.

@@ -13,7 +13,7 @@ spark*/
 data/*
 
 # Database
-db/
+db/*.json
 
 # Mac OS files
 .DS_Store

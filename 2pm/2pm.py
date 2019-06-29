@@ -3,6 +3,6 @@ import click
 
 @click.command()
 def help():
-    with open("2pm/help.txt") as f:
+    with open('doc/help.txt') as f:
         for line in f:
-                print(line, end = '')
+            print(line, end = '')
