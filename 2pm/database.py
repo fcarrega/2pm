@@ -90,8 +90,8 @@ def statement(ticker, name, frequency):
 # import csv
 # import pandas
 #
-# ticker = 'MAC'
-# name = 'Income statement'
+# ticker = 'SPG'
+# name = 'Balance sheet'
 # frequency = 'Annual'
 #
 # def pickle_dir(ticker):
