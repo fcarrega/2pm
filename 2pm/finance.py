@@ -27,7 +27,7 @@ def avg_ocf_growth(ticker):
 def payout_ratio(ticker):
     dividend = db.statement(ticker, 'Cash flow', 'Annual')['Cash dividends paid']
     net_income = db.statement(ticker, 'Income statement', 'Annual')['Net income']
-    ratio = dividend / net_income
+    ratio = - dividend / net_income
     return ratio.iloc[-1]
 
 # Passif / equity
