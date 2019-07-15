@@ -36,7 +36,7 @@ def liabilities_on_equity(ticker):
     liabilities = df['Total liabilities'].tail(1)
     equity = df["Total stockholders' equity"].tail(1)
     ratio = liabilities / equity
-    return ratio.iloc[-1] * -1
+    return ratio.iloc[-1]
 
 # Current ratio
 def current_ratio(ticker):
