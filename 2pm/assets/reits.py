@@ -87,7 +87,6 @@ def run_analysis_for(industry):
 @click.argument('ticker')
 def stats_for(ticker):
     print("Financial ratios for {0}:".format(ticker))
-    currency = finance.currency('reits', ticker)
 
     # Initialize stats
     statistics = pandas.DataFrame(stats(ticker))
@@ -100,6 +99,26 @@ def stats_for(ticker):
 
     pass
 
+@reit.command()
+@click.argument('ticker')
+def balance_sheet_for(ticker):
+    print("Balance sheet for {0}:".format(ticker))
+    print(database.statement(ticker, 'Balance Sheet', 'Annual').T)
+    pass
+
+@reit.command()
+@click.argument('ticker')
+def income_for(ticker):
+    print("Income statement for {0}:".format(ticker))
+    print(database.statement(ticker, 'Income Statement', 'Annual').T)
+    pass
+
+@reit.command()
+@click.argument('ticker')
+def cashflow_for(ticker):
+    print("Cash flow statement for {0}:".format(ticker))
+    print(database.statement(ticker, 'Cash Flow', 'Annual').T)
+    pass
 
 def header():
     index = ('5Y avg. eq. growth',
