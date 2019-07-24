@@ -6,6 +6,7 @@ import sys
 import click
 from tinydb import Query
 from money import Money
+import pandas
 
 # Custom libraries
 from .. import shared
@@ -46,11 +47,11 @@ def add(stock, name, stock_sector, stock_industry, ccy):
 
 # Remove stock from database
 @stock.command()
-@click.argument("stock")
+@click.argument("ticker")
 def remove(stock):
-    print("Removing stock " + stock + " from database...")
+    print("Removing stock " + ticker + " from database...")
     Stock = Query()
-    db.remove(Stock.ticker == stock)
+    db.remove(Stock.ticker == ticker)
     print("Done !")
 
 # List available stocks
@@ -74,21 +75,19 @@ def list_for(industry):
 
 # Load stocks financial statements for all stocks in database
 @stock.command()
-def load_financial_statements():
-    print("Updating financial statements for all stocks in DB...")
-    stocks = db.all()
-    for stock in stocks:
-        print(stock['ticker'])
-        database.load_financial_statements(stock['ticker'])
+@click.argument("ticker")
+def load(ticker):
+    print("Loading financial statements for {0}...".format(ticker))
+    financial_statements = database.load_financial_statements(ticker)
 
 # Load financial statements for a unique stock
 @stock.command()
-@click.argument("stock")
-def load_financial_statements_for(stock):
-    print("Loading financial statements for {0}...".format(stock))
-    financial_statements = database.load_financial_statements(stock)
+@click.argument("ticker")
+def load_financial_statements_for(ticker):
+    print("Loading financial statements for {0}...".format(ticker))
+    financial_statements = database.load_financial_statements(ticker)
     query = Query()
-    db.update(financial_statements, query.ticker == stock)
+    db.update(financial_statements, query.ticker == ticker)
 
 # Run financial analysis for a given stock industry
 @stock.command()
@@ -105,44 +104,66 @@ def run_analysis_for(industry):
         # ROE
         # CROIC
 
+@stock.command()
+@click.argument('ticker')
+def stats_for(ticker):
+    print("Financial ratios for {0}:".format(ticker))
+
+    # Initialize stats
+    statistics = pandas.DataFrame(stats(ticker))
+    statistics.index = header()
+    print(statistics)
+
+    # Transpose matrix
+    t = statistics.T.to_csv(index=False)
+    print(t)
+
+    pass
+
 
 @stock.command()
 @click.argument('ticker')
-@click.argument('price')
-@click.argument('dividend')
-def stats_for(ticker, price, dividend):
-    print("Financial ratios for {0}:".format(ticker))
-    currency = finance.currency('stocks', ticker)
-    print("Market cap.|Yield|Debt-to-market value|Payout ratio|5Y avg. FFOPS|5Y avg. FFOPS growth rate|5Y avg. dil. rate|5Y avg. ROE|5Y avg. ROIC|5Y avg. CROIC|5Y avg. FCF")
+def balance_sheet_for(ticker):
+    print("Balance sheet for {0}:".format(ticker))
+    print(database.statement(ticker, 'Balance Sheet', 'Annual').T)
+    pass
 
-    market_cap = finance.market_cap('stocks', ticker, 'quarterly', price) / 1000000
-    current_yield = finance.current_yield(price, dividend)
-    debt_to_market = finance.debt_to_market_value('stocks', ticker, 'quarterly', price)
-    payout_ratio = finance.payout_ratio('stocks', ticker, dividend)
-    avg_eps = finance.average_eps('stocks', ticker)
-    avg_eps_growth = finance.average_eps_growth('stocks', ticker)
-    avg_dil_rate = finance.average_dilution_rate('stocks', ticker)
-    avg_roe = finance.avg_roe('stocks', ticker)
-    avg_roic = finance.avg_roic('stocks', ticker)
-    avg_croic = finance.avg_croic('stocks', ticker)
-    avg_fcf = finance.avg_fcf('stocks', ticker)
-    avg_ebitda = finance.avg_stock_ebitda('stocks', ticker)
-    avg_ebitda_growth = finance.avg_stock_ebitda_growth('stocks', ticker)
-    avg_interest_coverage = finance.avg_stock_interest_coverage('stocks', ticker)
+@stock.command()
+@click.argument('ticker')
+def income_for(ticker):
+    print("Income statement for {0}:".format(ticker))
+    print(database.statement(ticker, 'Income Statement', 'Annual').T)
+    pass
 
-    print("{0}|{1:.2f}%|{2:.2f}%|{3:.2f}%|{4}|{5:.2f}%|{6:.2f}%|{7:.2f}%|{8:.2f}%|{9:.2f}%|{10:.2f}|{11}|{12}|{13}".format(market_cap, current_yield, debt_to_market, payout_ratio, avg_eps, avg_eps_growth, avg_dil_rate, avg_roe, avg_roic, avg_croic, avg_fcf, avg_ebitda, avg_ebitda_growth, avg_interest_coverage))
+@stock.command()
+@click.argument('ticker')
+def cashflow_for(ticker):
+    print("Cash flow statement for {0}:".format(ticker))
+    print(database.statement(ticker, 'Cash Flow', 'Annual').T)
+    pass
 
-    print("- Market capitalization: {0:.2f}".format(market_cap))
-    print("- Yield: {0:.2f}%".format(current_yield))
-    print("- Debt to market value: {0:.2f}%".format(debt_to_market))
-    print("- Payout ratio: {0:.2f}%".format(payout_ratio))
-    print("- 5Y avg. EPS: {0}".format(avg_eps))
-    print("- 5Y avg. EPS growth rate: {0:.2f}%".format(avg_eps_growth))
-    print("- 5Y avg. dilution rate: {0:.2f}%".format(avg_dil_rate))
-    print("- 5Y avg. ROE: {0:.2f}%".format(avg_roe))
-    print("- 5Y avg. ROIC: {0:.2f}%".format(avg_roic))
-    print("- 5Y avg. CROIC: {0:.2f}%".format(avg_croic))
-    print("- 5Y avg. FCF: {0:.2f}M {1}".format(avg_fcf, currency))
-    print("- 5Y avg. EBITDA: {0:.2f}M {1}".format(avg_ebitda, currency))
-    print("- 5Y avg. EBITDA growth rate: {0:.2f}%".format(avg_ebitda_growth))
-    print("- 5Y avg. EBITDA interests coverage: {0:.2f}".format(avg_interest_coverage))
+def header():
+    index = ('5Y avg. eq. growth',
+             '5Y avg. CROIC growth',
+             '5Y avg. OCF growth',
+             'Payout ratio',
+             'Liabilities / equity',
+             'Current ratio',
+             '5Y avg. IR coverage',
+             '5Y avg. dilution',
+             'Owners earnings',
+             'Cash use')
+    return index
+
+def stats(ticker):
+    statistics = [ finance.avg_equity_growth(ticker),     # 5Y average equity growth
+                   finance.avg_croic_growth(ticker),      # 5Y average cash return on invested capital growth
+                   finance.avg_ocf_growth(ticker),        # 5Y average operating cash flows growth
+                   finance.payout_ratio(ticker),          # Payout ratio
+                   finance.liabilities_on_equity(ticker), # Liabilities / equity
+                   finance.current_ratio(ticker),         # Current ratio
+                   finance.avg_ir_coverage(ticker),       # 5Y average IR coverage
+                   finance.avg_dilution(ticker),          # 5Y average dilution
+                   finance.owners_earnings(ticker),       # Owner's earnings
+                   finance.cash_use(ticker) ]             # Cash use
+    return statistics
